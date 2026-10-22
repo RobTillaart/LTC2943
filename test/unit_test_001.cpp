@@ -69,7 +69,7 @@ unittest(test_constructor)
 
   assertEqual(0x64, LTC.getAddress());
   assertEqual(LTC2943_OK, LTC.getLastError());
-  assertEqual(128, LTC.getPrescaler());
+  assertEqual(4096, LTC.getPrescaler());
   assertEqualFloat(1, LTC.getMaxCurrent(), 0.001);
 }
 
