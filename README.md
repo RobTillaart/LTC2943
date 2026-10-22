@@ -20,9 +20,6 @@ Arduino library for the LTC2943 battery charge and discharge (Coulomb) meter.
 
 Read the datasheet as this library is **work in progress**.
 
-TODO check ALL BELOW THIS LINE
-
-
 This library is to use the LTC2943 Coulomb meter.
 The LTC2943 indicates the accumulated charge and discharge of a battery
 so you can see how "full" the battery is.
@@ -31,7 +28,7 @@ The device is in essence a current sensor, and integrates the measured
 current with high resolution over time.
 This is both done when the battery is loading and unloading.
 
-The LTC2943 also provides voltage and temperature of the device.
+The LTC2943 also provides voltage, current and temperature of the device.
 If the LTC2943 is very close to the battery it is an indication for
 the battery temperature.
 
@@ -253,8 +250,8 @@ the battery and the internal counter.
 
 The functions return false in case of an error.
 
-- **bool setCharge(uint16_t charge)** raw register access.
-- **bool getCharge(uint16_t &charge)** raw register access.
+- **bool setRawCharge(uint16_t charge)** raw register access.
+- **bool getRawCharge(uint16_t &charge)** raw register access.
 - **bool setCharge(float charge)** charge in mAh, wrapper.
 - **bool getCharge(float &charge)** charge in mAh, wrapper.
 - **bool getPercentageFull(float &percentage)** return 0..100%,
@@ -296,10 +293,27 @@ See datasheet for details.
 High threshold should be higher than low threshold, otherwise the
 device is always in alarm state.
 
-- **bool setVoltageThresholdHigh(int8_t thresholdHigh)**
-- **bool getVoltageThresholdHigh(int8_t &thresholdHigh)**
-- **bool setVoltageThresholdLow(int8_t thresholdLow)**
-- **bool getVoltageThresholdLow(int8_t &thresholdLow)**
+- **bool setVoltageThresholdHigh(float thresholdHigh)**
+- **bool getVoltageThresholdHigh(float &thresholdHigh)**
+- **bool setVoltageThresholdLow(float thresholdLow)**
+- **bool getVoltageThresholdLow(float &thresholdLow)**
+
+
+### Current
+
+See datasheet for details.
+
+- **bool getCurrent(float &current)** current > 0, battery loads,
+current < 0, battery delivers.
+
+
+High threshold should be higher than low threshold, otherwise the
+device is always in alarm state.
+
+- **bool setCurrentThresholdHigh(float thresholdHigh)**
+- **bool getCurrentThresholdHigh(float &thresholdHigh)**
+- **bool setCurrentThresholdLow(float thresholdLow)**
+- **bool getCurrentThresholdLow(float &thresholdLow)**
 
 
 ### Temperature
@@ -312,10 +326,10 @@ See datasheet for details.
 High threshold should be higher than low threshold, otherwise the
 device is always in alarm state.
 
-- **bool setTemperatureThresholdHigh(int8_t thresholdHigh)**
-- **bool getTemperatureThresholdHigh(int8_t &thresholdHigh)**
-- **bool setTemperatureThresholdLow(int8_t thresholdLow)**
-- **bool getTemperatureThresholdLow(int8_t &thresholdLow)**
+- **bool setTemperatureThresholdHigh(float thresholdHigh)**
+- **bool getTemperatureThresholdHigh(float &thresholdHigh)**
+- **bool setTemperatureThresholdLow(float thresholdLow)**
+- **bool getTemperatureThresholdLow(float &thresholdLow)**
 
 
 ### Debug
@@ -351,7 +365,7 @@ device is always in alarm state.
 
 #### Should
 
-- fix check limit in begin()
+- check limit in begin()
 
 #### Could
 
