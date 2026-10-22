@@ -57,22 +57,23 @@ bool LTC2943::begin(float RSense, float mAh)
     _error = LTC2943_RSENSE_ERROR;
     return false;
   }
-  //  Page 10, verify if RSense makes sense
-  if (RSense > ((0.085 * 0.050f * 65535) / mAh))
+  //  Page 12, verify if RSense makes sense
+  if (RSense > ((0.340 * 0.050f * 65535) / mAh))
   {
     _error = LTC2943_RSENSE_ERROR;
     return false;
   }
-  if ((mAh < 100) || (mAh > 5500))  //  check limit
-  {
-    _error = LTC2943_MAH_ERROR;
-    return false;
-  }
+  //  TODO check limit page 13
+  // if ((mAh < 100) || (mAh > 22000))
+  // {
+    // _error = LTC2943_MAH_ERROR;
+    // return false;
+  // }
 
-  //  Page 11, calculate and verify pre-scaler
-  float tmp = 128 * mAh /(65535 * 0.085f) * (RSense / 0.050f);
-  uint8_t prescaler;
-  for (prescaler = 1; prescaler < 128; prescaler *= 2)
+  //  Page 12/13, calculate and verify pre-scaler
+  float tmp = 4096 * mAh /(65535 * 0.340f) * (RSense / 0.050f);
+  uint16_t prescaler;
+  for (prescaler = 1; prescaler < 4096; prescaler *= 4)
   {
     if (prescaler > tmp) break;
   }
@@ -97,10 +98,10 @@ bool LTC2943::begin(float RSense, float mAh)
   _QLSB = _calculateQLSB();
 
   //  write pre-scaler to device.
-  int ps;
+  uint8_t ps;
   for (ps = 0; ps < 8; ps++)
   {
-    if ((1 << ps) == _prescaler) break;
+    if ((1UL << ps) == _prescaler) break;
   }
   uint8_t control = 0;   //  no error check here yet.
   _getControl(control);  //  read current configuration
@@ -301,31 +302,40 @@ bool LTC2943::getVoltage(float &voltage)
 
 bool LTC2943::setVoltageThresholdHigh(float th)
 {
-  uint8_t value = round(th * (256.0f / 6.0f));
-  _write(LTC2943_REG_VOLTS_TH_HIGH_MSB, &value, 2);
+  //  page 14
+  uint16_t raw = round(th * (65535.0f / 23.6f));
+  uint8_t value[2];
+  value[0] = raw >> 8;
+  value[1] = raw & 0xFF;
+  _write(LTC2943_REG_VOLTS_TH_HIGH_MSB, value, 2);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::getVoltageThresholdHigh(float &th)
 {
-  uint8_t value;
-  _read(LTC2943_REG_VOLTS_TH_HIGH_MSB, &value, 2);
-  th = value * (6.0f / 256.0f);
+  uint8_t value[2];
+  _read(LTC2943_REG_VOLTS_TH_HIGH_MSB, value, 2);
+  uint16_t raw = value[0] * 256 + value[1];
+  th = raw * (23.6f / 65535.0f);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::setVoltageThresholdLow(float th)
 {
-  uint8_t value = round(th * (256.0f / 6.0f));
-  _write(LTC2943_REG_VOLTS_TH_LOW_MSB, &value, 2);
+  uint16_t raw = round(th * (65535.0f / 23.6f));
+  uint8_t value[2];
+  value[0] = raw >> 8;
+  value[1] = raw & 0xFF;
+  _write(LTC2943_REG_VOLTS_TH_LOW_MSB, value, 2);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::getVoltageThresholdLow(float &th)
 {
-  uint8_t value;
-  _read(LTC2943_REG_VOLTS_TH_LOW_MSB, &value, 2);
-  th = value * (6.0f / 256.0f);
+  uint8_t value[2];
+  _read(LTC2943_REG_VOLTS_TH_LOW_MSB, value, 2);
+  uint16_t raw = value[0] * 256 + value[1];
+  th = raw * (23.6f / 65535.0f);
   return (_error == LTC2943_OK);
 }
 
@@ -337,38 +347,48 @@ bool LTC2943::getVoltageThresholdLow(float &th)
 bool LTC2943::getCurrent(float &current)
 {
   uint8_t value[2] = {0, 0};
-  _read(LTC2943_REG_CURRENT_MSB, value, 2);
-  current = ((value[0] << 8) + value[1]) * (6.0f / 65535.0f);
+  _read(LTC2943_REG_CURRENT_MSB, value, 2);  //  page 14
+  int16_t Vsense = ((value[0] * 256) + value[1]) - 32767;
+  current = Vsense / _RSense * (0.060f / 32767.0f);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::setCurrentThresholdHigh(float th)
 {
-  uint8_t value = round(th * (256.0f / 6.0f));
-  _write(LTC2943_REG_CURRENT_TH_HIGH_MSB, &value, 2);
+  //  page 15
+  uint16_t raw = round(th * ((32767 * 0.050) / 0.060)) + 32767;
+  uint8_t value[2];
+  value[0] = raw >> 8;
+  value[1] = raw & 0xFF;
+  _write(LTC2943_REG_CURRENT_TH_HIGH_MSB, value, 2);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::getCurrentThresholdHigh(float &th)
 {
-  uint8_t value;
-  _read(LTC2943_REG_CURRENT_TH_HIGH_MSB, &value, 2);
-  th = value * (6.0f / 256.0f);
+  uint8_t value[2];
+  _read(LTC2943_REG_CURRENT_TH_HIGH_MSB, value, 2);
+  int16_t raw = ((value[0] * 256) + value[1]) - 32767;
+  th = raw * (0.060 / (0.050 * 32767));
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::setCurrentThresholdLow(float th)
 {
-  uint8_t value = round(th * (256.0f / 6.0f));
-  _write(LTC2943_REG_CURRENT_TH_LOW_MSB, &value, 2);
+  uint16_t raw = round(th * (0.050 / 0.060 * 32767)) + 32767;  //  page 15
+  uint8_t value[2];
+  value[0] = raw >> 8;
+  value[1] = raw & 0xFF;
+  _write(LTC2943_REG_CURRENT_TH_LOW_MSB, value, 2);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::getCurrentThresholdLow(float &th)
 {
-  uint8_t value;
-  _read(LTC2943_REG_CURRENT_TH_LOW_MSB, &value, 2);
-  th = value * (6.0f / 256.0f);
+  uint8_t value[2];
+  _read(LTC2943_REG_CURRENT_TH_LOW_MSB, value, 2);
+  int16_t raw = ((value[0] * 256) + value[1]) - 32767;
+  th = raw * (0.060 / (0.050 * 32767));
   return (_error == LTC2943_OK);
 }
 
@@ -379,39 +399,48 @@ bool LTC2943::getCurrentThresholdLow(float &th)
 //
 bool LTC2943::getTemperature(float &temperature)
 {
+  //  page 15
   uint8_t value[2] = {0, 0};
   _read(LTC2943_REG_TEMP_MSB, value, 2);
-  temperature = ((value[0] << 8) + value[1]) * (600.0f / 65535.0f) - 273.15f;
+  temperature = ((value[0] << 8) + value[1]) * (510.0f / 65535.0f) - 273.15f;
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::setTemperatureThresholdHigh(float th)
 {
-  uint8_t value = round((th + 273.15f) * (256.0f / 600.0f));
-  _write(LTC2943_REG_TEMP_TH_HIGH, &value, 1);
+  uint16_t raw = round((th + 273.15f) * (65535.0f / 510.0f));
+  uint8_t value[2];
+  value[0] = raw >> 8;
+  value[1] = raw & 0xFF;
+  _write(LTC2943_REG_TEMP_TH_HIGH, value, 2);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::getTemperatureThresholdHigh(float &th)
 {
-  uint8_t value;
-  _read(LTC2943_REG_TEMP_TH_HIGH, &value, 1);
-  th = value * (600.0f / 256.0f) - 273.15;
+  uint8_t value[2];
+  _read(LTC2943_REG_TEMP_TH_HIGH, value, 1);
+  int16_t raw = (value[0] * 256) + value[1];
+  th = raw * (510.0f / 65535.0f) - 273.15;
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::setTemperatureThresholdLow(float th)
 {
-  uint8_t value = round((th + 273.15f) * (256.0f / 600.0f));
-  _write(LTC2943_REG_TEMP_TH_LOW, &value, 1);
+  uint16_t raw = round((th + 273.15f) * (65535.0f / 510.0f));
+  uint8_t value[2];
+  value[0] = raw >> 8;
+  value[1] = raw & 0xFF;
+  _write(LTC2943_REG_TEMP_TH_LOW, value, 1);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::getTemperatureThresholdLow(float &th)
 {
-  uint8_t value;
-  _read(LTC2943_REG_TEMP_TH_LOW, &value, 1);
-  th = value * (600.0f / 256.0f) - 273.15;
+  uint8_t value[2];
+  _read(LTC2943_REG_TEMP_TH_LOW, value, 1);
+  int16_t raw = (value[0] * 256) + value[1];
+  th = raw * (510.0f / 65535.0f) - 273.15;
   return (_error == LTC2943_OK);
 }
 
@@ -465,9 +494,9 @@ bool LTC2943::_getControl(uint8_t &control)
 float LTC2943::_calculateQLSB()
 {
   //  datasheet, page 4
-  //  0.085f = mAh,
+  //  0.340f = mAh,
   //  0.050f is default RSense = 50 mOhm
-  return (0.085f * 0.050f) / _RSense * (_prescaler * (1.0f / 128.0f));
+  return (0.340f * 0.050f) / _RSense * (_prescaler * (1.0f / 4096.0f));
 }
 
 //

@@ -20,6 +20,9 @@ Arduino library for the LTC2943 battery charge and discharge (Coulomb) meter.
 
 Read the datasheet as this library is **work in progress**.
 
+TODO check ALL BELOW THIS LINE
+
+
 This library is to use the LTC2943 Coulomb meter.
 The LTC2943 indicates the accumulated charge and discharge of a battery
 so you can see how "full" the battery is.
@@ -348,6 +351,7 @@ device is always in alarm state.
 
 #### Should
 
+- fix check limit in begin()
 
 #### Could
 

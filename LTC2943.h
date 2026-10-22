@@ -102,7 +102,7 @@ public:
 
   //       THRESHOLD CURRENT
   //       thresholds are rounded numbers
-  bool     getCurrent(float &current);
+  bool     getCurrent(float &current);  //  >0 => charging
   bool     setCurrentThresholdHigh(float thresholdHigh);
   bool     getCurrentThresholdHigh(float &thresholdHigh);
   bool     setCurrentThresholdLow(float thresholdLow);
@@ -132,7 +132,7 @@ private:
   //       datasheet page 4
   float    _RSense    = 0.050f;  //  50 mOhm (page 4)
   float    _mAh       = 0;       //  not initialized, use begin()
-  uint8_t  _prescaler = 128;     //  default POR (page 7)
+  uint16_t _prescaler = 4096;    //  default POR (page 7)
   float    _QLSB      = 0.085f;  //  default.
 
   //       datasheet page 9
