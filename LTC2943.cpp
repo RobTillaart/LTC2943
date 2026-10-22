@@ -58,7 +58,7 @@ bool LTC2943::begin(float RSense, float mAh)
     return false;
   }
   //  Page 12, verify if RSense makes sense
-  if (RSense > ((0.340 * 0.050f * 65535) / mAh))
+  if (RSense > ((0.000340 * 0.050f * 65535) / mAh))
   {
     _error = LTC2943_RSENSE_ERROR;
     return false;
@@ -71,7 +71,7 @@ bool LTC2943::begin(float RSense, float mAh)
   // }
 
   //  Page 12/13, calculate and verify pre-scaler
-  float tmp = 4096 * mAh /(65535 * 0.340f) * (RSense / 0.050f);
+  float tmp = 4096 * mAh /(65535 * 0.000340f) * (RSense / 0.050f);
   uint16_t prescaler;
   for (prescaler = 1; prescaler < 4096; prescaler *= 4)
   {
@@ -296,7 +296,7 @@ bool LTC2943::getVoltage(float &voltage)
 {
   uint8_t value[2] = {0, 0};
   _read(LTC2943_REG_VOLTS_MSB, value, 2);
-  voltage = ((value[0] << 8) + value[1]) * (6.0f / 65535.0f);
+  voltage = ((value[0] << 8) + value[1]) * (23.6f / 65535.0f);
   return (_error == LTC2943_OK);
 }
 
@@ -419,7 +419,7 @@ bool LTC2943::setTemperatureThresholdHigh(float th)
 bool LTC2943::getTemperatureThresholdHigh(float &th)
 {
   uint8_t value[2];
-  _read(LTC2943_REG_TEMP_TH_HIGH, value, 1);
+  _read(LTC2943_REG_TEMP_TH_HIGH, value, 2);
   int16_t raw = (value[0] * 256) + value[1];
   th = raw * (510.0f / 65535.0f) - 273.15;
   return (_error == LTC2943_OK);
@@ -431,14 +431,14 @@ bool LTC2943::setTemperatureThresholdLow(float th)
   uint8_t value[2];
   value[0] = raw >> 8;
   value[1] = raw & 0xFF;
-  _write(LTC2943_REG_TEMP_TH_LOW, value, 1);
+  _write(LTC2943_REG_TEMP_TH_LOW, value, 2);
   return (_error == LTC2943_OK);
 }
 
 bool LTC2943::getTemperatureThresholdLow(float &th)
 {
   uint8_t value[2];
-  _read(LTC2943_REG_TEMP_TH_LOW, value, 1);
+  _read(LTC2943_REG_TEMP_TH_LOW, value, 2);
   int16_t raw = (value[0] * 256) + value[1];
   th = raw * (510.0f / 65535.0f) - 273.15;
   return (_error == LTC2943_OK);
@@ -494,9 +494,9 @@ bool LTC2943::_getControl(uint8_t &control)
 float LTC2943::_calculateQLSB()
 {
   //  datasheet, page 4
-  //  0.340f = mAh,
+  //  0.000340f = 0.340 mAh,
   //  0.050f is default RSense = 50 mOhm
-  return (0.340f * 0.050f) / _RSense * (_prescaler * (1.0f / 4096.0f));
+  return (0.000340f * 0.050f) / _RSense * (_prescaler * (1.0f / 4096.0f));
 }
 
 //
