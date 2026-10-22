@@ -39,27 +39,27 @@ unittest_teardown()
 
 unittest(test_constants_error)
 {
-  assertEqual(0x00, LTC2942_OK             );
-  assertEqual(0x10, LTC2942_NOT_READY      );
-  assertEqual(0x11, LTC2942_REQUEST_ERROR1 );
-  assertEqual(0x12, LTC2942_REQUEST_ERROR2 );
-  assertEqual(0x13, LTC2942_CONTROL_ERROR  );
-  assertEqual(0x14, LTC2942_RSENSE_ERROR   );
-  assertEqual(0x15, LTC2942_MAH_ERROR      );
-  assertEqual(0x16, LTC2942_PRESCALER_ERROR);
-  assertEqual(0xFF, LTC2942_OTHER_ERROR    );
+  assertEqual(0x00, LTC2943_OK             );
+  assertEqual(0x10, LTC2943_NOT_READY      );
+  assertEqual(0x11, LTC2943_REQUEST_ERROR1 );
+  assertEqual(0x12, LTC2943_REQUEST_ERROR2 );
+  assertEqual(0x13, LTC2943_CONTROL_ERROR  );
+  assertEqual(0x14, LTC2943_RSENSE_ERROR   );
+  assertEqual(0x15, LTC2943_MAH_ERROR      );
+  assertEqual(0x16, LTC2943_PRESCALER_ERROR);
+  assertEqual(0xFF, LTC2943_OTHER_ERROR    );
 }
 
 
 unittest(test_constants_status)
 {
-  assertEqual(0x01, LTC2942_ALERT_UNDERVOLTAGE );
-  assertEqual(0x02, LTC2942_ALERT_VOLTAGE      );
-  assertEqual(0x04, LTC2942_ALERT_CHARGE_LOW   );
-  assertEqual(0x08, LTC2942_ALERT_CHARGE_HIGH  );
-  assertEqual(0x10, LTC2942_ALERT_TEMPERATURE  );
-  assertEqual(0x20, LTC2942_ALERT_UNDEROVERFLOW);
-  assertEqual(0x80, LTC2942_CHIP_ID            );
+  assertEqual(0x01, LTC2943_ALERT_UNDERVOLTAGE );
+  assertEqual(0x02, LTC2943_ALERT_VOLTAGE      );
+  assertEqual(0x04, LTC2943_ALERT_CHARGE_LOW   );
+  assertEqual(0x08, LTC2943_ALERT_CHARGE_HIGH  );
+  assertEqual(0x10, LTC2943_ALERT_TEMPERATURE  );
+  assertEqual(0x20, LTC2943_ALERT_UNDEROVERFLOW);
+  assertEqual(0x40, LTC2943_ALERT_CURRENT      );
 }
 
 

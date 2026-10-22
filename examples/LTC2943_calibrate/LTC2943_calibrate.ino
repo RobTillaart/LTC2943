@@ -7,9 +7,9 @@
 //  this sketch checks if a {Rsense, mAh} combination makes sense.
 //  read datasheet page 10,11
 
-#include "LTC2942.h"
+#include "LTC2943.h"
 
-LTC2942 LTC;
+LTC2943 LTC;
 
 
 void setup()
@@ -17,8 +17,8 @@ void setup()
   Serial.begin(115200);
   Serial.println();
   Serial.println(__FILE__);
-  Serial.print("LTC2942_LIB_VERSION: ");
-  Serial.println(LTC2942_LIB_VERSION);
+  Serial.print("LTC2943_LIB_VERSION: ");
+  Serial.println(LTC2943_LIB_VERSION);
   Serial.println();
 
   Wire.begin();
