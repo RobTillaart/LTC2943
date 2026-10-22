@@ -1,8 +1,8 @@
 //
 //    FILE: LTC2943.cpp
 //  AUTHOR: Rob Tillaart
-//    DATE: 2026-09-18
 // VERSION: 0.1.0
+//    DATE: 2026-09-18
 // PURPOSE: Arduino library for the LTC2943 battery charge and discharge (Coulomb) meter.
 //     URL: https://github.com/RobTillaart/LTC2943
 

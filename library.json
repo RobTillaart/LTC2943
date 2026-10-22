@@ -1,6 +1,6 @@
 {
   "name": "LTC2943",
-  "keywords": "",
+  "keywords": "voltage, temperature",
   "description": "Arduino library for the LTC2943 battery charge and discharge (Coulomb) meter.",
   "authors":
   [
