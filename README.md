@@ -34,7 +34,7 @@ the battery temperature.
 
 The device allows to set a low/high charge threshold.
 These can trigger an alarm when the battery is nearly full / empty.
-The device has also thresholds for voltage and temperature.
+The device has also thresholds for voltage, current and temperature.
 The device has a status register that shows the different alarms supported.
 
 The LTC2943 can be configured.
@@ -89,7 +89,7 @@ Check datasheet!
 
 ### Compatibles
 
-The LTC2943 has different registers compared to the LTC2943/43/44.
+The LTC2943 has different registers compared to the LTC2941/42/44.
 
 
 ### Related
@@ -108,9 +108,9 @@ Other
 
 ### Tested
 
-Library is not tested with hardware yet.
+**Library is not tested with hardware yet.**
 
-TODO: Test on Arduino UNO and ESP32
+TODO: Test on Arduino UNO and ESP32.
 
 
 ## I2C
@@ -125,9 +125,7 @@ If one needs more sensors there are some options.
 - One could use an MCU with multiple I2C buses.
 - One could use a (Two-Wire compatible) SW I2C (outside scope of this library).
 
-Using the VCC as a Chip Select is not advised as the LTC2943
-has a preheat time of 2 minutes.
-Every time the power is shut off the pre-heat would run again internally.
+Using the VCC as a Chip Select is not advised for the LTC2943.
 It is unclear what effect this has on the lifetime and quality of the sensor.
 
 
@@ -192,11 +190,11 @@ The user has to make sure that ```RSense > 0.005 Ohm```
 
 ### Status
 
-See datasheet for details.
+For details see datasheet page 10.
 
 - **bool getStatus(uint8_t &status)**
 
-Status byte, see datasheet
+Status byte
 
 |  bit  |  description        |  notes  |
 |:-----:|:--------------------|:--------|
@@ -212,12 +210,12 @@ Status byte, see datasheet
 
 ### Control register
 
-See datasheet for details.
+For details see datasheet page 11.
 
 - **bool setControl(uint8_t ALCC,  uint8_t prescaler,  uint8_t shutDown, uint8_t ADCMode)**
 - **bool getControl(uint8_t &ALCC, uint8_t &prescaler, uint8_t &shutDown, uint8_t &ADCMode)**
 
-Control fields, see datasheet page 9.
+Control fields
 
 |  bit  |  description        |  range  | default |  notes  |
 |:-----:|:--------------------|:--------|:--------|:--------|
@@ -245,7 +243,7 @@ Control fields, see datasheet page 9.
 
 ### Charge
 
-See datasheet page 10-11 for details, especially how to align
+See datasheet page 12-13 for details, especially how to align
 the battery and the internal counter.
 
 The functions return false in case of an error.
@@ -361,7 +359,7 @@ device is always in alarm state.
 - fix TODO in documentation and code
 - get hardware to test
   - verify API
-- keep in sync with LTC2943 where possible.
+- keep in sync with LTC294X where possible.
 
 #### Should
 

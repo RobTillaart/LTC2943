@@ -11,7 +11,7 @@ Comparison of LTCxxxx Battery charge and discharge (Coulomb) meters.
 
 |                           |  2941  |  2942  |  2943  |  2944  |  4150  |
 |:--------------------------|:------:|:------:|:------:|:------:|:------:|
-|  library                  |    Y   |    N   |    N   |    N   |    N   |
+|  library                  |    Y   |    Y   |    Y   |    N   |    N   |
 |  bits                     |    -   |   14   |   14   |   14   |    -   |
 |  Max Voltage              |    6V  |   6V   |   20V  |   60V  |   8V   |
 |  Communication            |   I2C  |   I2C  |   I2C  |   I2C  | bit-io |
@@ -31,7 +31,7 @@ Comparison of LTCxxxx Battery charge and discharge (Coulomb) meters.
 |  setTempThresholdLow      |    -   |    Y   |    Y   |    Y   |    -   |
 
 
-The LTC2943 / LTC2944 is a superset of the LTC2941.
+The LTC2943 / LTC2944 has a superset of the LTC2941.
 
 The LTC2942 has other register mapping.
 
@@ -57,11 +57,11 @@ Some stand alone devices are quite simple e.g. LTC4058.
 |  LTC4052    |  Monolithic Lithium-Ion Battery Pulse Charger
 |  LTC4053    |  USB Compatible Monolithic Li-Ion Battery Charger
 |  LTC4057    |  Lithium-Ion Linear Battery Charger
-|  LTC4058    |  Standalone 950mA Lithium-Ion Charger in DFN
+|  LTC4058    |  Stand alone 950mA Lithium-Ion Charger in DFN
 |  LTC4059    |  900mA Linear Lithium-Ion Battery Charger
-|  LTC4061    |  Standalone Linear Li-Ion Battery Charger with Thermistor Input
+|  LTC4061    |  Stand alone Linear Li-Ion Battery Charger with Thermistor Input
 |  LTC4063    |  Li-Ion Charger with Linear Regulator
-|  LTC4080    |  500mA Standalone Li-Ion Charger with Integrated 300mA Synchronous Buck
+|  LTC4080    |  500mA Stand alone Li-Ion Charger with Integrated 300mA Synchronous Buck
 |  LTC4088    |  High Efficiency Battery Charger/USB Power Manager
 
 Possibly there are more (source datasheets)
