@@ -456,7 +456,7 @@ int LTC2943::getLastError()
   return e;
 }
 
-uint8_t LTC2943::getPrescaler()
+uint16_t LTC2943::getPrescaler()
 {
   return _prescaler;
 }

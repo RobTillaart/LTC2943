@@ -120,7 +120,7 @@ public:
   //       DEBUG
   int      getLastError();
   //  getPrescaler() returns {1,4,16,64,256,1024,4096,4096}
-  uint8_t  getPrescaler();
+  uint16_t  getPrescaler();
   //  calculates the Imax based upon Rsense
   float    getMaxCurrent();
 
