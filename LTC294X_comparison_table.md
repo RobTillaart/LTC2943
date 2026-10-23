@@ -11,21 +11,27 @@ Comparison of LTCxxxx Battery charge and discharge (Coulomb) meters.
 
 |                           |  2941  |  2942  |  2943  |  2944  |  4150  |
 |:--------------------------|:------:|:------:|:------:|:------:|:------:|
-|  library                  |    Y   |    Y   |    Y   |    N   |    N   |
-|  bits                     |    -   |   14   |   14   |   14   |    -   |
+|  library                  |    Y   |    Y   |    Y   |    Y   |    N   |
+|  bits                     |    ?   |   14   |   14   |   14   |    -   |
 |  Max Voltage              |    6V  |   6V   |   20V  |   60V  |   8V   |
-|  Communication            |   I2C  |   I2C  |   I2C  |   I2C  | bit-io |
+|  Cells                    |    1   |   1    |   > 1  |   > 1  |    ?   |
+|  Communication            |   I2C  |   I2C  |   I2C  |   I2C  | bit-IO |
+|  Address                  |  0x64  |  0x64  |  0x64  |  0x64  |    -   |
 |  Channels                 |    1   |    1   |    1   |    1   |    1   |
 |                           |        |        |        |        |        |
+|  setCharge                |    Y   |    Y   |    Y   |    Y   |    -   |
 |  getCharge                |    Y   |    Y   |    Y   |    Y   |   IRQ  |
 |  setChargeThresholdHigh   |    Y   |    Y   |    Y   |    Y   |    -   |
 |  setChargeThresholdLow    |    Y   |    Y   |    Y   |    Y   |    -   |
+|                           |        |        |        |        |        |
 |  getVoltage               |    -   |    Y   |    Y   |    Y   |    -   |
 |  setVoltageThresholdHigh  |    -   |    Y   |    Y   |    Y   |    -   |
 |  setVoltageThresholdLow   |    -   |    Y   |    Y   |    Y   |    -   |
+|                           |        |        |        |        |        |
 |  getCurrent               |    -   |    -   |    Y   |    Y   |    -   |
 |  setCurrentThresholdHigh  |    -   |    -   |    Y   |    Y   |    -   |
 |  setCurrentThresholdLow   |    -   |    -   |    Y   |    Y   |    -   |
+|                           |        |        |        |        |        |
 |  getTemperature           |    -   |    Y   |    Y   |    Y   |    -   |
 |  setTempThresholdHigh     |    -   |    Y   |    Y   |    Y   |    -   |
 |  setTempThresholdLow      |    -   |    Y   |    Y   |    Y   |    -   |

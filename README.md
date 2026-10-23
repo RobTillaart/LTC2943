@@ -64,11 +64,25 @@ and any other applications that may cause personal injury due to the product's f
 
 Read datasheet, page ??
 
-TODO elaborate.
+Preliminary, to be verified.
 
-About calibration...
-- load accu full
-- setCharge(mAh)
+The essence of the calibration of the library with the battery used, is to set
+the charge at the moment the battery is considered full, with **setCharge(mAh)**.
+The **mAh** is the same as used in **begin(Rsense, mAh)**.
+
+The battery is considered full if there is no charge build up any more. 
+At that moment there is no current flowing to the battery. 
+If the power supply is disconnected the battery should have maximum voltage.
+
+A good practice is to set the charge threshold HIGH to e.g. 95% of the full 
+capacity so an alert can be given when the battery is almost full.
+Then one know when it is time to disconnect the power supply.
+Setting the charge threshold LOW to e.g. 20% so an alert is given when the 
+battery is going to be empty. 
+Percentages are indicative, your project might need other thresholds, e.g.
+might start alerts when the battery is below 50%.
+Note the alert bits in the control register must be set to enable the alerts.
+See **setControl()** 
 
 
 ### Hardware
@@ -97,9 +111,10 @@ The LTC2943 has different registers compared to the LTC2941/42/44.
 Current sensors
 - https://github.com/RobTillaart/ACS712 - ACS series current sensor
 - https://github.com/RobTillaart/INA226 - family of current and power sensors
-- https://github.com/RobTillaart/LTC2941 - charge only
-- https://github.com/RobTillaart/LTC2942_RT - charge, voltage, temperature
-- https://github.com/RobTillaart/LTC2943 - charge, voltage, temperature
+- https://github.com/RobTillaart/LTC2941 - 6V, charge only
+- https://github.com/RobTillaart/LTC2942_RT - 6V, charge, voltage, temperature
+- https://github.com/RobTillaart/LTC2943 - 20V, charge, voltage, temperature
+- https://github.com/RobTillaart/LTC2944 - 60V, charge, voltage, temperature
 
 Other
 - https://wiki.seeedstudio.com/Grove-Coulomb_Counter_3.3V_to_5V-LTC2941/
@@ -173,9 +188,10 @@ TODO: run performance sketch on hardware.
 ### Constructor
 
 - **LTC2943(TwoWire \*wire = &Wire)** optional select I2C bus.
-- **bool begin(float mAh, float RSense)**
-Sets the capacity of the battery and the used resistor.
-Verifies these are in range.
+- **bool begin(float mAh, float RSense = 0.050)**
+Sets the capacity of the battery and the used resistor, the latter
+a default of 50 milliOhm.
+Verifies these parameters are in a valid range.
 Calculates the pre-scaler and the QLSB from these numbers
 Finally it checks if the device address is visible on the I2C bus.
 - **bool isConnected()** Checks if device address can be found on I2C bus.
@@ -253,9 +269,9 @@ The functions return false in case of an error.
 - **bool setCharge(float charge)** charge in mAh, wrapper.
 - **bool getCharge(float &charge)** charge in mAh, wrapper.
 - **bool getPercentageFull(float &percentage)** return 0..100%,
-compares with mAh parameter from begin().
-- **float getQLSB()** charge in mAh of single bit.
-Conversion factor determined by RSense and mAh from **begin()**
+compares internal cumulated charge with mAh parameter from **begin()**.
+- **float getQLSB()** charge in mAh of a single bit.
+Conversion factor determined by RSense and mAh from **begin()**.
 
 Note: at any moment the user has to detect the battery is completely
 full (or empty) and set the appropriate charge in the device.
@@ -287,7 +303,6 @@ See datasheet for details.
 
 - **bool getVoltage(float &volts)**
 
-
 High threshold should be higher than low threshold, otherwise the
 device is always in alarm state.
 
@@ -304,7 +319,6 @@ See datasheet for details.
 - **bool getCurrent(float &current)** current > 0, battery loads,
 current < 0, battery delivers.
 
-
 High threshold should be higher than low threshold, otherwise the
 device is always in alarm state.
 
@@ -319,7 +333,6 @@ device is always in alarm state.
 See datasheet for details.
 
 - **bool getTemperature(float &temperature)**
-
 
 High threshold should be higher than low threshold, otherwise the
 device is always in alarm state.
@@ -355,11 +368,10 @@ device is always in alarm state.
 #### Must
 
 - improve documentation
-  - how to calibrate (resistor, prescaler, ...)
 - fix TODO in documentation and code
 - get hardware to test
   - verify API
-- keep in sync with LTC294X where possible.
+- keep in sync with other LTC294X
 
 #### Should
 

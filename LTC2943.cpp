@@ -47,7 +47,7 @@ LTC2943::LTC2943(TwoWire *wire)
   _wire = wire;
 }
 
-bool LTC2943::begin(float RSense, float mAh)
+bool LTC2943::begin(float mAh, float RSense)
 {
   //  check parameters.
   //  RSense, what is minimum allowed? Max current?

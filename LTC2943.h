@@ -48,7 +48,7 @@ public:
   //  RSense > 0.005 Ohm
   //  RSense < 50 mVolt / Imax ==> check with getMaxCurrent()
   //  mAh is the capacity of the battery
-  bool     begin(float RSense, float mAh);
+  bool     begin(float mAh, float RSense = 0.050);
   bool     isConnected();
   uint8_t  getAddress();
 
